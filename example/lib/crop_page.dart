@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:crop_crop/crop_crop.dart';
 import 'package:flutter/material.dart';
 
-class CropPage extends StatelessWidget {
+class CropPage extends StatefulWidget {
   const CropPage({
     Key? key,
     required this.imgBytes,
@@ -13,6 +13,13 @@ class CropPage extends StatelessWidget {
 
   final Uint8List imgBytes;
   final File imgFile;
+
+  @override
+  State<CropPage> createState() => _CropPageState();
+}
+
+class _CropPageState extends State<CropPage> {
+  final CropController _controller = CropController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +31,18 @@ class CropPage extends StatelessWidget {
         children: [
           Expanded(
             child: Crop(
-              imgFile: imgFile,
+              controller: _controller,
+              imgFile: widget.imgFile,
             ),
           ),
           Row(
             children: [
               ElevatedButton(
-                onPressed: () {},
-                child: const Text("Done"),
+                onPressed: () async {
+                  final cropped = _controller.crop();
+                  Navigator.pop(context, cropped);
+                },
+                child: const Text("Crop"),
               ),
             ],
           )

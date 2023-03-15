@@ -4,38 +4,41 @@ class CropDot extends StatelessWidget {
   const CropDot({
     Key? key,
     required this.alignment,
+    this.dotSize = 25,
+    this.widget,
   }) : super(key: key);
 
   final EdgeAlignment alignment;
-  final double _k = 25;
+  final double dotSize;
+  final Widget? widget;
 
   double _calcTop(Rect cropZone) {
     switch (alignment) {
       case EdgeAlignment.topLeft:
-        return cropZone.top - (_k / 2);
+        return cropZone.top - (dotSize / 2);
       case EdgeAlignment.bottomLeft:
-        return cropZone.top + cropZone.height - (_k / 2);
+        return cropZone.top + cropZone.height - (dotSize / 2);
       case EdgeAlignment.topRight:
-        return cropZone.top - (_k / 2);
+        return cropZone.top - (dotSize / 2);
       case EdgeAlignment.bottomRight:
-        return cropZone.top + cropZone.height - (_k / 2);
+        return cropZone.top + cropZone.height - (dotSize / 2);
       default:
-        return cropZone.top - (_k / 2);
+        return cropZone.top - (dotSize / 2);
     }
   }
 
   double _calcLeft(Rect cropZone) {
     switch (alignment) {
       case EdgeAlignment.topLeft:
-        return cropZone.left - (_k / 2);
+        return cropZone.left - (dotSize / 2);
       case EdgeAlignment.bottomLeft:
-        return cropZone.left - (_k / 2);
+        return cropZone.left - (dotSize / 2);
       case EdgeAlignment.topRight:
-        return cropZone.left + cropZone.width - (_k / 2);
+        return cropZone.left + cropZone.width - (dotSize / 2);
       case EdgeAlignment.bottomRight:
-        return cropZone.left + cropZone.width - (_k / 2);
+        return cropZone.left + cropZone.width - (dotSize / 2);
       default:
-        return cropZone.left - (_k / 2);
+        return cropZone.left - (dotSize / 2);
     }
   }
 
@@ -66,14 +69,21 @@ class CropDot extends StatelessWidget {
                   break;
               }
             },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(_k),
-              ),
-              width: _k,
-              height: _k,
-            ),
+            child: widget != null
+                ? Container(
+                    color: Colors.transparent,
+                    width: dotSize,
+                    height: dotSize,
+                    child: widget,
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(dotSize),
+                    ),
+                    width: dotSize,
+                    height: dotSize,
+                  ),
           ),
         );
       },

@@ -32,35 +32,51 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  File? image;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text("Pick Image"),
-          onPressed: () async {
-            final XFile? picked = await ImagePicker().pickImage(
-              source: ImageSource.gallery,
-              // maxWidth: 1000,
-            );
-            if (picked != null) {
-              final bytes = await picked.readAsBytes();
-              if (!mounted) return;
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => CropPage(
-                    imgBytes: bytes,
-                    imgFile: File(picked.path),
+      body: Column(
+        children: [
+          Expanded(
+            child: image != null
+                ? Image.file(image!)
+                : const Center(
+                    child: Text("No Image Selected"),
                   ),
-                ),
+          ),
+          ElevatedButton(
+            child: const Text("Pick Image"),
+            onPressed: () async {
+              final XFile? picked = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                // maxWidth: 1000,
               );
-            }
-          },
-        ),
+              if (picked != null) {
+                final bytes = await picked.readAsBytes();
+                if (!mounted) return;
+                final cropped = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CropPage(
+                      imgBytes: bytes,
+                      imgFile: File(picked.path),
+                    ),
+                  ),
+                );
+
+                if (cropped is File) {
+                  setState(() {
+                    image = cropped;
+                  });
+                }
+              }
+            },
+          ),
+        ],
       ),
     );
   }

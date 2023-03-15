@@ -6,11 +6,15 @@ class Crop extends StatelessWidget {
     required this.imgFile,
     this.sampleFile,
     this.controller,
+    this.dotSize = 25,
+    this.dot,
   }) : super(key: key);
 
   final File imgFile;
   final File? sampleFile;
   final CropController? controller;
+  final double dotSize;
+  final Widget? dot;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,8 @@ class Crop extends StatelessWidget {
             layoutSize: maxSize,
             imgFile: imgFile,
             sampleFile: sampleFile,
+            dot: dot,
+            dotSize: dotSize,
           ),
         );
       },
@@ -37,11 +43,15 @@ class _CropWidget extends StatefulWidget {
     required this.layoutSize,
     required this.imgFile,
     this.sampleFile,
+    required this.dotSize,
+    this.dot,
   }) : super(key: key);
 
   final Size layoutSize;
   final File imgFile;
   final File? sampleFile;
+  final double dotSize;
+  final Widget? dot;
 
   @override
   State<_CropWidget> createState() => __CropWidgetState();
@@ -93,29 +103,25 @@ class __CropWidgetState extends State<_CropWidget> {
         ),
         const CropZone(),
         const CropPointer(),
-        const CropDot(alignment: EdgeAlignment.topLeft),
-        const CropDot(alignment: EdgeAlignment.bottomLeft),
-        const CropDot(alignment: EdgeAlignment.topRight),
-        const CropDot(alignment: EdgeAlignment.bottomRight),
-        Positioned(
-          bottom: 0,
-          child: ElevatedButton(
-            child: const Text("Crop"),
-            onPressed: () async {
-              final cropped = await context.read<CropController>().crop();
-
-              final prop =
-                  await FlutterNativeImage.getImageProperties(cropped.path);
-              final bytes = await cropped.readAsBytes();
-
-              debugPrint("CROPPED: ${prop.width} | ${prop.height}");
-              debugPrint("CROPPED: ${bytes.lengthInBytes / 1024}KB");
-
-              setState(() {
-                showedImage = cropped;
-              });
-            },
-          ),
+        CropDot(
+          dotSize: widget.dotSize,
+          widget: widget.dot,
+          alignment: EdgeAlignment.topLeft,
+        ),
+        CropDot(
+          dotSize: widget.dotSize,
+          widget: widget.dot,
+          alignment: EdgeAlignment.bottomLeft,
+        ),
+        CropDot(
+          dotSize: widget.dotSize,
+          widget: widget.dot,
+          alignment: EdgeAlignment.topRight,
+        ),
+        CropDot(
+          dotSize: widget.dotSize,
+          widget: widget.dot,
+          alignment: EdgeAlignment.bottomRight,
         ),
       ],
     );
