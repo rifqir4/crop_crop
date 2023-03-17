@@ -71,14 +71,26 @@ class __CropWidgetState extends State<_CropWidget> {
       final prop = await FlutterNativeImage.getImageProperties(
         widget.imgFile.path,
       );
-      final bytes = await widget.imgFile.readAsBytes();
 
+      final bytes = await widget.imgFile.readAsBytes();
       debugPrint("BEFORE: ${prop.width} | ${prop.height}");
+      double imageWidth = prop.width?.toDouble() ?? 0;
+      double imageHeight = prop.height?.toDouble() ?? 0;
+
+      if ([ImageOrientation.rotate90, ImageOrientation.rotate270]
+          .contains(prop.orientation)) {
+        final temp = imageWidth;
+        imageWidth = imageHeight;
+        imageHeight = temp;
+      }
+
+      debugPrint("BEFORE: ${prop.orientation}");
+      debugPrint("BEFORE: $imageWidth | $imageHeight");
       debugPrint("BEFORE: ${bytes.lengthInBytes / 1024}KB");
 
       final picture = Picture(
         file: widget.imgFile,
-        size: Size(prop.width?.toDouble() ?? 0, prop.height?.toDouble() ?? 0),
+        size: Size(imageWidth, imageHeight),
       );
       if (!mounted) return;
       context.read<CropController>().preparingImage(picture, widget.layoutSize);

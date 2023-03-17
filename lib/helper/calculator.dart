@@ -16,6 +16,9 @@ class Calculator {
 
   static Rect calcImgRect(Size layoutSize, Size imageSize) {
     final isVertical = imageSize.aspectRatio < layoutSize.aspectRatio;
+    debugPrint("IMAGE ASPECT: ${imageSize.aspectRatio}");
+    debugPrint("LAYOUT ASPECT: ${layoutSize.aspectRatio}");
+
     if (isVertical) {
       final imageScreenWidth = layoutSize.height * imageSize.aspectRatio;
       final left = (layoutSize.width - imageScreenWidth) / 2;
@@ -23,6 +26,7 @@ class Calculator {
       return Rect.fromLTWH(left, 0, right - left, layoutSize.height);
     } else {
       final imageScreenHeight = layoutSize.width / imageSize.aspectRatio;
+      // debugPrint("imageScreenHeight: ${imageScreenHeight}");
       final top = (layoutSize.height - imageScreenHeight) / 2;
       final bottom = top + imageScreenHeight;
       return Rect.fromLTWH(0, top, layoutSize.width, bottom - top);
@@ -30,7 +34,11 @@ class Calculator {
   }
 
   static Rect calcZoneToImg(Rect zoneRect, Rect imgRect, Size imageSize) {
-    final ratio = imageSize.height / imgRect.height;
+    final isVertical = imgRect.width < imgRect.height;
+    double ratio = imageSize.height / imgRect.height;
+    if (!isVertical) {
+      ratio = imageSize.width / imgRect.width;
+    }
     final width = zoneRect.width * ratio;
     final height = zoneRect.height * ratio;
     final left = (zoneRect.left - imgRect.left) * ratio;

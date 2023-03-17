@@ -55,6 +55,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 source: ImageSource.gallery,
                 // maxWidth: 1000,
               );
+              // final XFile? picked = await ImagePicker().pickImage(
+              //   source: ImageSource.camera,
+              //   // maxWidth: 1000,
+              // );
               if (picked != null) {
                 final bytes = await picked.readAsBytes();
                 if (!mounted) return;
