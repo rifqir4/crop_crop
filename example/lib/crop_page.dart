@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -33,6 +34,9 @@ class _CropPageState extends State<CropPage> {
             child: Crop(
               controller: _controller,
               imgFile: widget.imgFile,
+              onLoadComplete: () {
+                log("DONE LOAD IMAGE");
+              },
             ),
           ),
           Row(
