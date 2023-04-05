@@ -8,9 +8,9 @@ class Calculator {
     final center = (imgRect.longestSide - width) / 2;
     final isVertical = imgRect.width < imgRect.height;
     if (isVertical) {
-      return Rect.fromLTWH(imgRect.left, center, width, width);
+      return Rect.fromLTWH(imgRect.left, imgRect.top + center, width, width);
     } else {
-      return Rect.fromLTWH(center, imgRect.top, width, width);
+      return Rect.fromLTWH(imgRect.left + center, imgRect.top, width, width);
     }
   }
 
