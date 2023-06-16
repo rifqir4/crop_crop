@@ -3,15 +3,57 @@ part of crop_crop;
 class Calculator {
   Calculator._();
 
-  static Rect calcInitialRectZone(Rect imgRect) {
-    final width = imgRect.shortestSide;
-    final center = (imgRect.longestSide - width) / 2;
-    final isVertical = imgRect.width < imgRect.height;
-    if (isVertical) {
-      return Rect.fromLTWH(imgRect.left, imgRect.top + center, width, width);
+  static Rect calcInitialRectZone(
+    Size layoutSize,
+    Size imageSize,
+    Rect imgRect,
+    double aspectRatio,
+  ) {
+    if (imageSize.aspectRatio < layoutSize.aspectRatio) {
+      return _calcInitialVerticalRectZone(layoutSize, imgRect, aspectRatio);
     } else {
-      return Rect.fromLTWH(imgRect.left + center, imgRect.top, width, width);
+      return _calcInitialHorizontalRectZone(layoutSize, imgRect, aspectRatio);
     }
+  }
+
+  static Rect _calcInitialHorizontalRectZone(
+    Size screenSize,
+    Rect imageRect,
+    double aspectRatio,
+  ) {
+    final imageRatio = imageRect.width / imageRect.height;
+    final imageScreenHeight = screenSize.width / imageRatio;
+
+    final initialSize = imageRatio > aspectRatio
+        ? Size((imageScreenHeight * aspectRatio), imageScreenHeight)
+        : Size(screenSize.width, (screenSize.width / aspectRatio));
+
+    return Rect.fromLTWH(
+      (screenSize.width - initialSize.width) / 2,
+      (screenSize.height - initialSize.height) / 2,
+      initialSize.width,
+      initialSize.height,
+    );
+  }
+
+  static Rect _calcInitialVerticalRectZone(
+    Size screenSize,
+    Rect imageRect,
+    double aspectRatio,
+  ) {
+    final imageRatio = imageRect.width / imageRect.height;
+    final imageScreenWidth = screenSize.height * imageRatio;
+
+    final initialSize = imageRatio < aspectRatio
+        ? Size(imageScreenWidth, imageScreenWidth / aspectRatio)
+        : Size((screenSize.height * aspectRatio), screenSize.height);
+
+    return Rect.fromLTWH(
+      (screenSize.width - initialSize.width) / 2,
+      (screenSize.height - initialSize.height) / 2,
+      initialSize.width,
+      initialSize.height,
+    );
   }
 
   static Rect calcImgRect(Size layoutSize, Size imageSize) {

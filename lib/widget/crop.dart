@@ -9,6 +9,7 @@ class Crop extends StatelessWidget {
     this.dotSize = 25,
     this.dot,
     this.onLoadComplete,
+    this.aspectRatio,
   }) : super(key: key);
 
   final File imgFile;
@@ -17,6 +18,7 @@ class Crop extends StatelessWidget {
   final double dotSize;
   final Widget? dot;
   final VoidCallback? onLoadComplete;
+  final double? aspectRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class Crop extends StatelessWidget {
             dot: dot,
             dotSize: dotSize,
             onLoadComplete: onLoadComplete,
+            aspectRatio: aspectRatio,
           ),
         );
       },
@@ -49,6 +52,7 @@ class _CropWidget extends StatefulWidget {
     required this.dotSize,
     this.dot,
     this.onLoadComplete,
+    this.aspectRatio,
   }) : super(key: key);
 
   final Size layoutSize;
@@ -57,6 +61,7 @@ class _CropWidget extends StatefulWidget {
   final double dotSize;
   final Widget? dot;
   final VoidCallback? onLoadComplete;
+  final double? aspectRatio;
 
   @override
   State<_CropWidget> createState() => __CropWidgetState();
@@ -88,7 +93,11 @@ class __CropWidgetState extends State<_CropWidget> {
         size: Size(imageWidth, imageHeight),
       );
       if (!mounted) return;
-      context.read<CropController>().preparingImage(picture, widget.layoutSize);
+      context.read<CropController>().preparingImage(
+            newPicture: picture,
+            layoutSize: widget.layoutSize,
+            aspectRatio: widget.aspectRatio,
+          );
       setState(() {
         isPrepared = true;
         widget.onLoadComplete?.call();
